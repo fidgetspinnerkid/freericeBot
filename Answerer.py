@@ -32,7 +32,7 @@ class Answerer:
 
     @staticmethod
     def answer_translate(number_of_times):
-        Answerer.answer(number_of_times, "http://freerice.com/#/spanish/16116", Solver.translate_to_en)
+        Answerer.answer(number_of_times, "http://freerice.com/#/spanish/16116", Solver.translate_to_en_v2)
     @staticmethod
     def answer_basic_math(number_of_times):
         Answerer.answer(number_of_times, "http://freerice.com/#/basic-math-pre-algebra/17420", Solver.solve)

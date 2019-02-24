@@ -488,8 +488,9 @@ class Solver:
         return Solver.chem_check_answers(Solver.symbol(input), answers)
 
 
-    @submitmethod
-    def translate_to_en_v2(word,c0,c1,c2,c3):
+    @staticmethod
+    def translate_to_en_v2(word,choices):
+        c0,c1,c2,c3 = choices
         tra=Translator()
         raw_trans=tra.translate(word).text.lower()
         filtered_trans=raw_trans.split()
