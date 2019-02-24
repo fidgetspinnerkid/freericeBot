@@ -25,28 +25,33 @@ class Answerer:
     @staticmethod
     def answer_basic_math(number_of_times):
         driver = webdriver.Firefox()
+        driver.get("http://freerice.com/#/basic-math-pre-algebra/16859")
         for i in range(number_of_times):
             time.sleep(1)
-            driver.get("http://freerice.com/#/basic-math-pre-algebra/16859")
+
             assert "Basic Math" in driver.title
+            assert "content-area" in driver.page_source
+            question = WebDriverWait(driver, 10).until(find_question)
 
-            question = driver.find_element_by_xpath("//*[@id=\"question-title\"]/a/b")
+            choices = WebDriverWait(driver, 10).until(find_choices)
+            print("DONE WITH WebDriverWait")
 
-            choices = driver.find_elements_by_class_name("answer-item")
-
-            print("question: "+str(question.text))
-            print("choices:")
+            try:
+                answer = Solver.solve(question.text)
+                print("I KNEW IT!!!!!!!!!!!!!!!!!!!!")
+            except selenium.common.exceptions.StaleElementReferenceException:
+                choices = WebDriverWait(driver, 4).until(find_choices)
+                question = WebDriverWait(driver, 10).until(find_question)
+                continue
+            except ValueError:
+                answer = choices[0].text
 
             for choice in choices:
-                print(choice.text)
-
-            answer = Solver.detect(question.text)
-            print("answer: "+ str(answer))
-
-            for choice in choices:
-                if str(answer) == choice.text:
-                    choice.click()
-                    break
+                try:
+                    if str(answer) == choice.text:
+                        choice.click()
+                except selenium.common.exceptions.StaleElementReferenceException:
+                    choices = driver.find_elements_by_class_name("answer-item")
         driver.close()
 
     @staticmethod

@@ -60,7 +60,7 @@ def main():
     #
     # driver.close()
 
-    #   Answerer.answer_basic_math(9999)
+    Answerer.answer_basic_math(9999)
     Answerer.answer_english(9999)
 
 if __name__ == "__main__":
