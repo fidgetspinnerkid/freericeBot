@@ -325,8 +325,7 @@ class Solver:
     def __init__(self):
         pass
 
-
-@staticmethod
+    @staticmethod
     def var(string):
         if "+" in string:
             splitString = string.split("^")
@@ -351,7 +350,7 @@ class Solver:
         perc = int(string[0])/100
         return eval(str(perc) + "*" + string[1])
 
-   @staticmethod
+    @staticmethod
     def rounded(string):
         if ".5" in string:
             string = string.split(" rounded")
@@ -360,13 +359,20 @@ class Solver:
             string = string.split(" rounded")
             return round(float(string[0]))
     @staticmethod
-    def solve(string):
+    def solve(string, choices):
         if "A" in string:
             return Solver.var(string)
+        elif "." in string and len(string) == 3:
+            return string[:1]+"%"
         elif "square root" in string:
+            print("in sqrt")
+            print(string)
+            print(Solver.sqRoot(string))
             return Solver.sqRoot(string)
         elif "of" in string:
             return Solver.percents(string)
+        elif "%" in string:
+            return string.split("%")[0]+"/100"
         elif "rounded" in string:
             return Solver.rounded(string)
         elif string.count('/') > 1:
@@ -392,10 +398,13 @@ class Solver:
         elif "^" in string:
             string = string.replace('^', '**')
             return int(eval(string))
+        elif "." in string:
+            return str(eval(string))[1:]
+        elif "+" in string or "-" in string or "/" in string or "x" in string:
+            return int(eval(string))
         else:
-            return eval(string)
+            raise ValueError
 
-print(Solver.solve("30% of 67"))
 
     @staticmethod
     def similar(w1,w2):

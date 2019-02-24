@@ -32,9 +32,11 @@ class Answerer:
 
     @staticmethod
     def answer_basic_math(number_of_times):
-        Answerer.answer(number_of_times, "http://freerice.com/#/basic-math-pre-algebra/16859", Solver.solve)
+        Answerer.answer(number_of_times, "http://freerice.com/#/basic-math-pre-algebra/17420", Solver.solve)
 
-
+    @staticmethod
+    def answer_mult(number_of_times):
+        Answerer.answer(number_of_times, "http://freerice.com/#/multiplication-table/17501", Solver.solve)
     @staticmethod
     def answer_english(number_of_times):
 
@@ -53,7 +55,10 @@ class Answerer:
         driver.get(url)
         for i in range(number_of_times):
             time.sleep(0.8)
-
+            if i>2:
+                rice_sentence = WebDriverWait(driver, 10).until(find_rice_given)
+                rice_num = int(re.search(r'\d+', rice_sentence.text).group())
+                print("rice given"+str(rice_num))
             assert "content-area" in driver.page_source
 
             question = WebDriverWait(driver, 10).until(find_question)
@@ -71,7 +76,7 @@ class Answerer:
 
             for choice in choices:
                 try:
-                    if str(answer) == choice.text:
+                    if str(answer) in choice.text:
                         choice.click()
                 except selenium.common.exceptions.StaleElementReferenceException:
                     choices = driver.find_elements_by_class_name("answer-item")
