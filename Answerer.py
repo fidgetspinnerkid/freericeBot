@@ -39,10 +39,10 @@ class Answerer:
         driver.get(url)
         for i in range(number_of_times):
             time.sleep(0.8)
-            if i>2:
-                rice_sentence = WebDriverWait(driver, 10).until(find_rice_given)
-                rice_num = int(re.search(r'\d+', rice_sentence.text).group())
-                print("rice given"+str(rice_num))
+            # if i>2:
+            #     rice_sentence = WebDriverWait(driver, 10).until(find_rice_given)
+            #     rice_num = int(re.search(r'\d+', rice_sentence.text).group())
+            #     print("rice given"+str(rice_num))
             assert "content-area" in driver.page_source
 
             question = WebDriverWait(driver, 10).until(find_question)
@@ -55,11 +55,11 @@ class Answerer:
                 choices = WebDriverWait(driver, 4).until(find_choices)
                 question = WebDriverWait(driver, 10).until(find_question)
                 continue
-            except ValueError:
-                answer = choices[0].text
-            if answer ==1:
-                answer = choices[0].text
-                
+            # except ValueError:
+            #     print("VALUE ERROR")
+            #     answer = choices[0].text
+
+
             for choice in choices:
                 try:
                     if str(answer) in choice.text or choice.text in str(answer):

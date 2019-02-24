@@ -491,24 +491,51 @@ class Solver:
     @staticmethod
     def translate_to_en_v2(word,choices):
         c0,c1,c2,c3 = choices
-        tra=Translator()
+        translate_urls = ["translate.google.com", "translate.google.co.kr",
+                      "translate.google.at", "translate.google.de",
+                      "translate.google.ru", "translate.google.ch",
+                              "translate.google.fr", "translate.google.es"]
+        tra = Translator(service_urls=translate_urls)
+        print(word)
+        print(choices)
         raw_trans=tra.translate(word).text.lower()
+
         filtered_trans=raw_trans.split()
+
         j=0
+
         for i in filtered_trans:
+
             s=i
-            print(s)
+
             if s in c0 or c0 in s:
+
                 return c0
+
             elif s in c1 or c1 in s:
+
                 return c1
+
             elif s in c2 or c2 in s:
+
                 return c2
+
             elif s in c3 or c3 in s:
+
                 return c3
+
             else:
+
                 try:
+
                     j=syn_eval_v2(i,c0,c1,c2,c3)
+
                 except:
-                    aaaa=1
-        return j
+
+                    j=0
+
+        if(str(j)!="0"):
+
+            return str(j)
+
+        raise ValueError
