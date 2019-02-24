@@ -1,6 +1,23 @@
 from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
 from Solver import Solver
 from Answerer import Answerer
+import selenium
+
+
+def find_choices(driver):
+    element = driver.find_elements_by_class_name("answer-item")
+    if element:
+        return element
+    else:
+        return False
+
+def find_question(driver):
+    element = driver.find_element_by_xpath("//*[@id=\"question-title\"]/a/b")
+    if element:
+        return element
+    else:
+        return False
 
 def main():
     # mySolver = Solver()
@@ -43,7 +60,8 @@ def main():
     #
     # driver.close()
 
-    Answerer.answer_basic_math(1000)
+    Answerer.answer_basic_math(9999)
+    Answerer.answer_english(9999)
 
 if __name__ == "__main__":
     main()
