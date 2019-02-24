@@ -488,30 +488,26 @@ class Solver:
         return Solver.chem_check_answers(Solver.symbol(input), answers)
 
 
-    @staticmethod
-    def syn_eval_v2(word,c0,c1,c2,c3):
-        syn_list=wordnet.synsets(word)
-        thes_word=Word('word').synonyms()
-        for i in syn_list[0].lemmas():
-            s=" ".join(i.name().split('_'))
-            print(s)
-            if(s==c0):
-                return c0
-            elif s==c1:
-                return c1
-            elif s==c2:
-                return c2
-            elif s==c3:
-                return c3
-        for i in thes_word:
+    @submitmethod
+    def translate_to_en_v2(word,c0,c1,c2,c3):
+        tra=Translator()
+        raw_trans=tra.translate(word).text.lower()
+        filtered_trans=raw_trans.split()
+        j=0
+        for i in filtered_trans:
             s=i
             print(s)
-            if(s==c0):
+            if s in c0 or c0 in s:
                 return c0
-            elif s==c1:
+            elif s in c1 or c1 in s:
                 return c1
-            elif s==c2:
+            elif s in c2 or c2 in s:
                 return c2
-            elif s==c3:
+            elif s in c3 or c3 in s:
                 return c3
-        raise ValueError('Word not found')
+            else:
+                try:
+                    j=syn_eval_v2(i,c0,c1,c2,c3)
+                except:
+                    aaaa=1
+            return j
