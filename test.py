@@ -20,7 +20,8 @@ def find_question(driver):
         return False
 
 def main():
-    Answerer.answer_capital(9999999999999999999)
+
+    Answerer.answer_basic_math(9999999999999999999)
 
 if __name__ == "__main__":
     main()

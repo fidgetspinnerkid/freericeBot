@@ -3,6 +3,7 @@ from Solver import Solver
 from selenium.webdriver.support.ui import WebDriverWait
 import selenium
 import time
+import re
 
 def find_choices(driver):
     element = driver.find_elements_by_class_name("answer-item")
@@ -18,126 +19,49 @@ def find_question(driver):
     else:
         return False
 
+def find_rice_given(driver):
+    element = driver.find_element_by_xpath("//*[@id=\"game-status-right\"]")
+    if element:
+        return element
+    else:
+        return False
+
 class Answerer:
     def __init__(self):
         pass
 
     @staticmethod
     def answer_basic_math(number_of_times):
-        driver = webdriver.Firefox()
-        driver.get("http://freerice.com/#/basic-math-pre-algebra/16859")
-        for i in range(number_of_times):
-            time.sleep(0.8)
+        Answerer.answer(number_of_times, "http://freerice.com/#/basic-math-pre-algebra/16859", Solver.solve)
 
-            assert "Basic Math" in driver.title
-            assert "content-area" in driver.page_source
-            question = WebDriverWait(driver, 10).until(find_question)
-
-            choices = WebDriverWait(driver, 10).until(find_choices)
-            print("DONE WITH WebDriverWait")
-
-            try:
-                answer = Solver.solve(question.text)
-                print("I KNEW IT!!!!!!!!!!!!!!!!!!!!")
-            except selenium.common.exceptions.StaleElementReferenceException:
-                choices = WebDriverWait(driver, 4).until(find_choices)
-                question = WebDriverWait(driver, 10).until(find_question)
-                continue
-            except ValueError:
-                answer = choices[0].text
-
-            for choice in choices:
-                try:
-                    if str(answer) == choice.text:
-                        choice.click()
-                except selenium.common.exceptions.StaleElementReferenceException:
-                    choices = driver.find_elements_by_class_name("answer-item")
-        driver.close()
 
     @staticmethod
     def answer_english(number_of_times):
-        time.sleep(3)
-        driver = webdriver.Firefox()
 
-        driver.get("http://freerice.com/#/english-vocabulary/13442")
-        for i in range(number_of_times):
-
-            time.sleep(0.5)
-
-            assert "English" in driver.title
-            assert "content-area" in driver.page_source
-            question = WebDriverWait(driver, 10).until(find_question)
-
-            choices = WebDriverWait(driver, 10).until(find_choices)
-            print("DONE WITH WebDriverWait")
-
-            try:
-                answer = Solver.closest_synonyms(question.text, [c.text for c in choices])
-                print("I KNEW IT!!!!!!!!!!!!!!!!!!!!")
-            except selenium.common.exceptions.StaleElementReferenceException:
-                choices = WebDriverWait(driver, 4).until(find_choices)
-                question = WebDriverWait(driver, 10).until(find_question)
-                continue
-            except ValueError:
-                answer = choices[0].text
-
-            for choice in choices:
-                try:
-                    if str(answer) == choice.text:
-                        choice.click()
-                except selenium.common.exceptions.StaleElementReferenceException:
-                    choices = driver.find_elements_by_class_name("answer-item")
-
-        driver.close()
-
+        Answerer.answer(number_of_times, "http://freerice.com/#/english-vocabulary/13442", Solver.closest_synonyms)
+    @staticmethod
     def answer_chem(number_of_times):
-        driver = webdriver.Firefox()
-        driver.get("http://freerice.com/#/chemical-symbols-full-list/1079")
-        for i in range(number_of_times):
-            time.sleep(0.8)
+        Answerer.answer(number_of_times,"http://freerice.com/#/chemical-symbols-full-list/1079", Solver.find_symbol)
 
-            assert "Chemical" in driver.title
-            assert "content-area" in driver.page_source
-            question = WebDriverWait(driver, 10).until(find_question)
-
-            choices = WebDriverWait(driver, 10).until(find_choices)
-            print("DONE WITH WebDriverWait")
-
-            try:
-                answer = Solver.find_symbol(question.text, [i.text for i in choices])
-                print("I KNEW IT!!!!!!!!!!!!!!!!!!!!")
-            except selenium.common.exceptions.StaleElementReferenceException:
-                choices = WebDriverWait(driver, 4).until(find_choices)
-                question = WebDriverWait(driver, 10).until(find_question)
-                continue
-            except ValueError:
-                answer = choices[0].text
-
-            for choice in choices:
-                try:
-                    if str(answer) == choice.text:
-                        choice.click()
-                except selenium.common.exceptions.StaleElementReferenceException:
-                    choices = driver.find_elements_by_class_name("answer-item")
-        driver.close()
-
+    @staticmethod
     def answer_capital(number_of_times):
+        Answerer.answer(number_of_times, "http://freerice.com/#/world-capitals/13632", Solver.find_capital)
+
+    @staticmethod
+    def answer(number_of_times, url, solve_func):
         driver = webdriver.Firefox()
-        driver.get("http://freerice.com/#/world-capitals/13632")
+        driver.get(url)
         for i in range(number_of_times):
             time.sleep(0.8)
 
-            assert "Capital" in driver.title
             assert "content-area" in driver.page_source
 
             question = WebDriverWait(driver, 10).until(find_question)
 
             choices = WebDriverWait(driver, 10).until(find_choices)
-            print("DONE WITH WebDriverWait")
 
             try:
-                answer = Solver.find_capital(question.text, [i.text for i in choices])
-                print("I KNEW IT!!!!!!!!!!!!!!!!!!!!")
+                answer = solve_func(question.text, [i.text for i in choices])
             except selenium.common.exceptions.StaleElementReferenceException:
                 choices = WebDriverWait(driver, 4).until(find_choices)
                 question = WebDriverWait(driver, 10).until(find_question)
@@ -151,4 +75,8 @@ class Answerer:
                         choice.click()
                 except selenium.common.exceptions.StaleElementReferenceException:
                     choices = driver.find_elements_by_class_name("answer-item")
+
+        rice_sentence = WebDriverWait(driver, 10).until(find_rice_given)
+        rice_num = int(re.search(r'\d+', rice_sentence).group())
+        print("rice given"+str(rice_num))
         driver.close()

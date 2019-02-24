@@ -351,7 +351,7 @@ class Solver:
         return eval(str(perc) + "*" + string[1])
 
     @staticmethod
-    def solve(string):
+    def solve(string, choices):
         if "A" in string:
             return Solver.var(string)
         elif "square root" in string:
@@ -429,7 +429,11 @@ class Solver:
 
     @staticmethod
     def find_capital(input, answers):
-        return Solver.check_answers(Solver.country_out(input), answers)
+        answer = Solver.check_answers(Solver.country_out(input), answers)
+        if answer:
+            return answer
+        else:
+            raise ValueError
 
     @staticmethod
     def symbol(symbolelement):
