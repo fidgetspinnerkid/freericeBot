@@ -256,23 +256,20 @@ class Solver:
         'Zambia': 'Lusaka',
         'Zimbabwe': 'Harare',
     }
+ 
 
-
-    def cap_country(capcountry):
+    def country_out(cap_in):
         for country, capital in capitals_dic.items():
-            if str(country).find(str(capcountry)) != -1:
-                return capital
-            elif str(capital).find(str(capcountry)) != -1:
+            if str(capital).find(str(cap_in)) != -1 or str(cap_in).find(str(capital)) != -1:
                 return country
 
 
-    def check_answers(capcountry_final):
+    def check_answers(capout_final):
         for answer in answers:
-            if str(answer).find(str(capcountry_final)) != -1 or str(capcountry_final).find(str(answer)) != -1:
+            if str(answer).find(str(capout_final)) != -1 or str(capout_final).find(str(answer)) != -1:
                 return answer
-            
-            
-    return(check_answers(cap_country(input)))
 
+
+    print(check_answers(country_out(input)))
 
 
