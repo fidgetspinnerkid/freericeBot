@@ -46,6 +46,7 @@ class Solver:
     #Translate
     
     from googletrans import Translator
-
+    
     def translate_to_en(word):
+        tra=Translator()
         return tra.translate("hello").text
