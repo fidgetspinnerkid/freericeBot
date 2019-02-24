@@ -56,7 +56,7 @@ class Solver:
             string = string.replace('^', '**')
             return int(eval(string))
         else:
-            return eval(string)
+            return int(eval(string))
 
     @staticmethod
     def similar(w1,w2):
