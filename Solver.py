@@ -1,5 +1,6 @@
 from nltk.corpus import wordnet
 from fractions import Fraction
+from math import sqrt
 
 class Solver:
     def __init__(self):
@@ -17,10 +18,20 @@ class Solver:
             splitString = string.split("x")
             expo = int(splitString[0][2]) - int(splitString[1][3])
             return "A^" + str(expo)
-            
+    def sqRoot(string):
+        string = string.split("root")
+        return sqrt(int(string[1]))
+    def percents(string):
+        string = string.split("% of ")
+        perc = int(string[0])/100
+        return eval(str(perc) + "*" + string[1])
     def solve(string):
         if "A" in string:
             return Solver.var(string)
+        elif "square root" in string:
+            return Solver.sqRoot(string)
+        elif "of" in string:
+            return Solver.percents(string)
         elif string.count('/') > 1:
             if "x" in string:
                 string = string.replace('x', '*')
