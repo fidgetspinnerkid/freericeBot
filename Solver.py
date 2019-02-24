@@ -43,4 +43,7 @@ class Solver:
             else:
                 raise ValueError('Word not found.')
     
-    
+    from googletrans import Translator
+
+    def translate_to_en(word):
+        return tra.translate("hello").text
