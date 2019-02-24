@@ -32,7 +32,40 @@ class Answerer:
 
     @staticmethod
     def answer_translate(number_of_times):
-        Answerer.answer(number_of_times, "http://freerice.com/#/spanish/16116", Solver.translate_to_en_v2)
+        url = "http://freerice.com/#/spanish/16116"
+        solve_func = Solver.translate_to_en_v2
+
+        driver = webdriver.Firefox()
+        driver.get(url)
+        for i in range(number_of_times):
+            time.sleep(0.8)
+            if i>2:
+                rice_sentence = WebDriverWait(driver, 10).until(find_rice_given)
+                rice_num = int(re.search(r'\d+', rice_sentence.text).group())
+                print("rice given"+str(rice_num))
+            assert "content-area" in driver.page_source
+
+            question = WebDriverWait(driver, 10).until(find_question)
+
+            choices = WebDriverWait(driver, 10).until(find_choices)
+
+            try:
+                answer = solve_func(question.text, [i.text for i in choices])
+            except selenium.common.exceptions.StaleElementReferenceException:
+                choices = WebDriverWait(driver, 4).until(find_choices)
+                question = WebDriverWait(driver, 10).until(find_question)
+                continue
+            except ValueError:
+                answer = choices[0].text
+            if answer ==1:
+                answer = choices[0].text
+                
+            for choice in choices:
+                try:
+                    if str(answer) in choice.text or choice.text in str(answer):
+                        choice.click()
+                except selenium.common.exceptions.StaleElementReferenceException:
+                    choices = driver.find_elements_by_class_name("answer-item")
     @staticmethod
     def answer_basic_math(number_of_times):
         Answerer.answer(number_of_times, "http://freerice.com/#/basic-math-pre-algebra/17420", Solver.solve)
