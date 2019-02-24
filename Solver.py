@@ -463,3 +463,34 @@ print(Solver.solve("30% of 67"))
     @staticmethod
     def find_symbol(input, answers):
         return Solver.chem_check_answers(Solver.symbol(input), answers)
+    
+    #Find best fit word v2
+from nltk.corpus import wordnet
+from thesaurus import Word
+
+def syn_eval_v2(word,c0,c1,c2,c3):
+    syn_list=wordnet.synsets(word)
+    thes_word=Word('word').synonyms()
+    for i in syn_list[0].lemmas():
+        s=" ".join(i.name().split('_'))
+        print(s)
+        if(s==c0):
+            return c0
+        elif s==c1:
+            return c1
+        elif s==c2:
+            return c2
+        elif s==c3:
+            return c3
+    for i in thes_word:
+        s=i
+        print(s)
+        if(s==c0):
+            return c0
+        elif s==c1:
+            return c1
+        elif s==c2:
+            return c2
+        elif s==c3:
+            return c3
+    raise ValueError('Word not found')
