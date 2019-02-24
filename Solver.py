@@ -2,6 +2,7 @@ from nltk.corpus import wordnet
 from fractions import Fraction
 from math import sqrt
 from googletrans import Translator
+from thesaurus import Word
 
 capitals_dic = {
     'Afghanistan': 'Kabul',
@@ -419,23 +420,36 @@ class Solver:
     def closest_synonyms(word,choices):
         c0,c1,c2,c3 = choices
         syn_list=wordnet.synsets(word)
+        thes_word=Word('word').synonyms()
         for i in syn_list[0].lemmas():
             s=" ".join(i.name().split('_'))
-            if Solver.similar(s,c0):
+            if(Solver.similar(s,c0)):
                 return c0
-            if Solver.similar(s,c1):
+            elif Solver.similar(s,c1):
                 return c1
-            if Solver.similar(s,c2):
+            elif Solver.similar(s,c2):
                 return c2
-            if Solver.similar(s,c3):
+            elif Solver.similar(s,c3):
                 return c3
-            else:
-                raise ValueError('Word not found.')
+        for i in thes_word:
+            s=i
+            if(Solver.similar(s,c0)):
+                return c0
+            elif Solver.similar(s,c1):
+                return c1
+            elif Solver.similar(s,c2):
+                return c2
+            elif Solver.similar(s,c3):
+                return c3
+        raise ValueError('Word not found')
 
     @staticmethod
-    def translate_to_en(word):
+    def translate_to_en(word, choices):
         tra=Translator()
-        return tra.translate(word).text
+        if tra.translate(word).text:
+            return tra.translate(word).text
+        else:
+            raise ValueError
 
     @staticmethod
     def country_out(cap_in):
@@ -472,34 +486,32 @@ class Solver:
     @staticmethod
     def find_symbol(input, answers):
         return Solver.chem_check_answers(Solver.symbol(input), answers)
-    
-    #Find best fit word v2
-from nltk.corpus import wordnet
-from thesaurus import Word
 
-def syn_eval_v2(word,c0,c1,c2,c3):
-    syn_list=wordnet.synsets(word)
-    thes_word=Word('word').synonyms()
-    for i in syn_list[0].lemmas():
-        s=" ".join(i.name().split('_'))
-        print(s)
-        if(s==c0):
-            return c0
-        elif s==c1:
-            return c1
-        elif s==c2:
-            return c2
-        elif s==c3:
-            return c3
-    for i in thes_word:
-        s=i
-        print(s)
-        if(s==c0):
-            return c0
-        elif s==c1:
-            return c1
-        elif s==c2:
-            return c2
-        elif s==c3:
-            return c3
-    raise ValueError('Word not found')
+
+    @staticmethod
+    def syn_eval_v2(word,c0,c1,c2,c3):
+        syn_list=wordnet.synsets(word)
+        thes_word=Word('word').synonyms()
+        for i in syn_list[0].lemmas():
+            s=" ".join(i.name().split('_'))
+            print(s)
+            if(s==c0):
+                return c0
+            elif s==c1:
+                return c1
+            elif s==c2:
+                return c2
+            elif s==c3:
+                return c3
+        for i in thes_word:
+            s=i
+            print(s)
+            if(s==c0):
+                return c0
+            elif s==c1:
+                return c1
+            elif s==c2:
+                return c2
+            elif s==c3:
+                return c3
+        raise ValueError('Word not found')

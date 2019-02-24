@@ -20,7 +20,7 @@ def find_question(driver):
         return False
 
 def main():
-    Answerer.answer_mult(9999999999999999999)
+    Answerer.answer_translate(9999999999999999999)
 
 if __name__ == "__main__":
     main()

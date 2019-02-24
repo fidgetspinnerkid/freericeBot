@@ -31,6 +31,9 @@ class Answerer:
         pass
 
     @staticmethod
+    def answer_translate(number_of_times):
+        Answerer.answer(number_of_times, "http://freerice.com/#/spanish/16116", Solver.translate_to_en)
+    @staticmethod
     def answer_basic_math(number_of_times):
         Answerer.answer(number_of_times, "http://freerice.com/#/basic-math-pre-algebra/17420", Solver.solve)
 
@@ -76,12 +79,12 @@ class Answerer:
 
             for choice in choices:
                 try:
-                    if str(answer) in choice.text:
+                    if str(answer) in choice.text or choice.text in str(answer):
                         choice.click()
                 except selenium.common.exceptions.StaleElementReferenceException:
                     choices = driver.find_elements_by_class_name("answer-item")
 
         rice_sentence = WebDriverWait(driver, 10).until(find_rice_given)
         rice_num = int(re.search(r'\d+', rice_sentence).group())
-        print("rice given"+str(rice_num))
+        print("rice given: "+str(rice_num))
         driver.close()
