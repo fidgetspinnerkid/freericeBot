@@ -39,7 +39,7 @@ class Solver:
                 string = string.replace('^', '**')
                 myDeci = eval(string)
                 return Fraction(myDeci).limit_denominator()
-            elif "/" in string:
+            elif string.count("/") > 2:
                 splitFrac = string.split("/")
                 ans = "(" + splitFrac[0] + "/" + splitFrac[1] + ")" + "/" + "(" + splitFrac[2] + "/" + splitFrac[3] + ")"
                 myDeci = eval(ans)
